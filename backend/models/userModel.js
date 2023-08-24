@@ -16,7 +16,6 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        validate: [validator.isAlphanumeric, "First name must be alphanumeric without special characters"]
     },
     password: {
         type: String,
@@ -27,6 +26,7 @@ const userSchema = new Schema({
     },
     entries: {
         type: Number,
+        default: 0
     }
 }, {
     timestamps: true
