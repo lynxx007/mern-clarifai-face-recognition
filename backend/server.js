@@ -5,6 +5,7 @@ import { connectDb } from './config/connectDb.js'
 import 'dotenv/config'
 import mongoSanitize from 'express-mongo-sanitize'
 import authRoutes from './routes/authRoutes.js'
+import { errorHandler, notFound } from './middlewares/errorMiddleware.js'
 
 
 
@@ -29,6 +30,9 @@ app.use('/api/v1/auth', authRoutes)
 
 
 
+
+app.use(notFound)
+app.use(errorHandler)
 
 
 app.listen(process.env.PORT || 6000, () => {

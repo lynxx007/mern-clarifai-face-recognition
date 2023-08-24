@@ -27,7 +27,8 @@ const userSchema = new Schema({
     entries: {
         type: Number,
         default: 0
-    }
+    },
+    refreshToken: [String]
 }, {
     timestamps: true
 })
