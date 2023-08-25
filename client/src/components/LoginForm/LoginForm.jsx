@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
 const Signin = ({ loadUser, onRouteChange }) => {
@@ -12,22 +13,17 @@ const Signin = ({ loadUser, onRouteChange }) => {
         setSignInPassword(event.target.value);
     };
 
-    const onSubmitSignIn = () => {
-        fetch('http://localhost:3000/signin', {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+    const onSubmitSignIn = async () => {
+        try {
+            const response = await axios.post('api/v1/auth/login', {
                 email: signInEmail,
-                password: signInPassword,
-            }),
-        })
-            .then((response) => response.json())
-            .then((user) => {
-                if (user.id) {
-                    loadUser(user);
-                    onRouteChange('home');
-                }
-            });
+                password: signInPassword
+            })
+            console.log(response);
+            // loadUser(response.data.user)
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (

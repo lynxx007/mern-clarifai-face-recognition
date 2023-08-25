@@ -56,8 +56,15 @@ const loginUser = expressAsyncHandler(async (req, res) => {
 
         res.json({
             success: true,
-            fullName: existingUser.fullName,
-            accessToken
+            user: {
+                fullName: existingUser.fullName,
+                id: existingUser._id,
+                email: existingUser.email,
+                entries: existingUser.entries,
+                createAt: existingUser.createdAt,
+                accessToken
+            }
+
         })
     } else {
         res.status(401)

@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import ParticlesBg from 'particles-bg';
 // import Clarifai from 'clarifai';
-// import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-// import Navigation from './components/Navigation/Navigation';
-// import Signin from './components/LoginForm/LoginForm';
-// import Register from './components/RegisterForm/RegisterForm';
-// import Logo from './components/Logo/Logo';
-// import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-// import Rank from './components/Rank/Rank';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import Navigation from './components/Navigation/Navigation';
+import Signin from './components/LoginForm/LoginForm';
+import Register from './components/RegisterForm/RegisterForm';
+import Logo from './components/Logo/Logo';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import Rank from './components/Rank/Rank';
 import './App.css';
 
 // const app = new Clarifai.App({
@@ -15,6 +15,8 @@ import './App.css';
 // });
 
 const App = () => {
+
+
   const [input, setInput] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [box, setBox] = useState({});
@@ -31,29 +33,29 @@ const App = () => {
   const loadUser = (data) => {
     setUser({
       id: data.id,
-      name: data.name,
+      name: data.fullName,
       email: data.email,
       entries: data.entries,
-      joined: data.joined
+      joined: data.createAt
     });
   }
 
-  const calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById('inputimage');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    }
-  }
+  // const calculateFaceLocation = (data) => {
+  //   const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+  //   const image = document.getElementById('inputimage');
+  //   const width = Number(image.width);
+  //   const height = Number(image.height);
+  //   return {
+  //     leftCol: clarifaiFace.left_col * width,
+  //     topRow: clarifaiFace.top_row * height,
+  //     rightCol: width - (clarifaiFace.right_col * width),
+  //     bottomRow: height - (clarifaiFace.bottom_row * height)
+  //   }
+  // }
 
-  const displayFaceBox = (box) => {
-    setBox(box);
-  }
+  // const displayFaceBox = (box) => {
+  //   setBox(box);
+  // }
 
   const onInputChange = (event) => {
     setInput(event.target.value);
@@ -61,26 +63,27 @@ const App = () => {
 
   const onButtonSubmit = () => {
     setImageUrl(input);
-
-    app.models.predict('face-detection', input)
-      .then(response => {
-        if (response) {
-          fetch('http://localhost:3000/image', {
-            method: 'put',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              id: user.id
-            })
-          })
-            .then(response => response.json())
-            .then(count => {
-              setUser(prevUser => ({ ...prevUser, entries: count }));
-            });
-        }
-        displayFaceBox(calculateFaceLocation(response));
-      })
-      .catch(err => console.log(err));
   }
+
+  //   app.models.predict('face-detection', input)
+  //     .then(response => {
+  //       if (response) {
+  //         fetch('http://localhost:3000/image', {
+  //           method: 'put',
+  //           headers: { 'Content-Type': 'application/json' },
+  //           body: JSON.stringify({
+  //             id: user.id
+  //           })
+  //         })
+  //           .then(response => response.json())
+  //           .then(count => {
+  //             setUser(prevUser => ({ ...prevUser, entries: count }));
+  //           });
+  //       }
+  //       displayFaceBox(calculateFaceLocation(response));
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
   const onRouteChange = (route) => {
     if (route === 'signout') {
@@ -93,7 +96,7 @@ const App = () => {
 
   return (
     <div className="App">
-      {/* <ParticlesBg type="fountain" bg={true} />
+      <ParticlesBg type="fountain" bg={true} />
       <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
       {route === 'home'
         ? <div>
@@ -111,10 +114,9 @@ const App = () => {
         : (
           route === 'signin'
             ? <Signin loadUser={loadUser} onRouteChange={onRouteChange} />
-            : <Register loadUser={loadUser} onRouteChange={onRouteChange} />
+            : <Register onRouteChange={onRouteChange} />
         )
-      } */}]
-      Hi
+      }
     </div>
   );
 }
