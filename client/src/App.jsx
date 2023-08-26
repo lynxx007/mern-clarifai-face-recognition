@@ -3,7 +3,7 @@ import ParticlesBg from 'particles-bg';
 // import Clarifai from 'clarifai';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import Navigation from './components/Navigation/Navigation';
-import Signin from './components/LoginForm/LoginForm';
+import SignIn from './components/LoginForm/LoginForm';
 import Register from './components/RegisterForm/RegisterForm';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -65,6 +65,9 @@ const App = () => {
     setImageUrl(input);
   }
 
+
+
+
   //   app.models.predict('face-detection', input)
   //     .then(response => {
   //       if (response) {
@@ -88,7 +91,8 @@ const App = () => {
   const onRouteChange = (route) => {
     if (route === 'signout') {
       setIsSignedIn(false);
-    } else if (route === 'home') {
+    }
+    else if (route === 'home') {
       setIsSignedIn(true);
     }
     setRoute(route);
@@ -108,13 +112,14 @@ const App = () => {
           <ImageLinkForm
             onInputChange={onInputChange}
             onButtonSubmit={onButtonSubmit}
+
           />
           <FaceRecognition box={box} imageUrl={imageUrl} />
         </div>
         : (
           route === 'signin'
-            ? <Signin loadUser={loadUser} onRouteChange={onRouteChange} />
-            : <Register onRouteChange={onRouteChange} />
+            ? <SignIn loadUser={loadUser} onRouteChange={onRouteChange} />
+            : <Register loadUser={loadUser} onRouteChange={onRouteChange} />
         )
       }
     </div>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 
 const Register = ({ loadUser, onRouteChange }) => {
@@ -17,23 +18,20 @@ const Register = ({ loadUser, onRouteChange }) => {
         setPassword(event.target.value);
     };
 
-    const onSubmitSignIn = () => {
-        fetch('api/v1/auth/register', {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+    const onSubmitSignIn = async () => {
+        try {
+            const response = await axios.post('api/v1/auth/register', {
                 email: email,
-                password: password,
-                name: name,
-            }),
-        })
-            .then((response) => response.json())
-            .then((user) => {
-                if (user) {
-                    loadUser(user);
-                    onRouteChange('home');
-                }
-            });
+                fullName: name,
+                password: password
+            })
+            loadUser(response.data.user)
+            onRouteChange('home')
+        } catch (error) {
+            console.error(error)
+        }
+
+
     };
 
     return (

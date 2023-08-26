@@ -42,7 +42,14 @@ const registerUser = expressAsyncHandler(async (req, res) => {
 
     res.json({
         success: true,
-        message: "A new user has been registered"
+        message: "A new user has been registered",
+        user: {
+            fullName: registeredUser.fullName,
+            id: registeredUser._id,
+            email: registeredUser.email,
+            entries: registeredUser.entries,
+            createAt: registeredUser.createdAt,
+        }
     })
 })
 

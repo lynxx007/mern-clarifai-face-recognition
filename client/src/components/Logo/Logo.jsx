@@ -1,6 +1,6 @@
 
 import Tilt from 'react-parallax-tilt';
-import brain from './brain.png';
+import brain from '../Logo/brain.png';
 import './Logo.css';
 
 const Logo = () => {

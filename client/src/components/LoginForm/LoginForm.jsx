@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 
-const Signin = ({ loadUser, onRouteChange }) => {
+const SignIn = ({ loadUser, onRouteChange }) => {
     const [signInEmail, setSignInEmail] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
 
@@ -19,8 +19,10 @@ const Signin = ({ loadUser, onRouteChange }) => {
                 email: signInEmail,
                 password: signInPassword
             })
-            console.log(response);
-            // loadUser(response.data.user)
+            console.log(response)
+            loadUser(response.data.user)
+            onRouteChange('home')
+
         } catch (error) {
             console.log(error);
         }
@@ -79,4 +81,4 @@ const Signin = ({ loadUser, onRouteChange }) => {
     );
 };
 
-export default Signin;
+export default SignIn;
