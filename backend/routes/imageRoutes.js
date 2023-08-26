@@ -1,6 +1,5 @@
 import express from 'express'
 import { clarifaiApiCallUrl } from '../controllers/clarifaiRequests/predictViaUrl.js';
-
 const router = express.Router()
 
 router.get('/predict', async (req, res) => {

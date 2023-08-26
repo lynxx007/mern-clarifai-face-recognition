@@ -35,7 +35,6 @@ export const clarifaiApiCallUrl = async (imageUrl) => {
 
 
 
-
                 resolve(response);
             }
         );
