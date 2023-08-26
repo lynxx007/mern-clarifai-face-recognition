@@ -21,7 +21,8 @@ const FaceRecognition = ({ imageUrl, box }) => {
                     ))
                 ) : (
                     <div></div>
-                )}            </div>
+                )}
+            </div>
         </div>
     );
 }

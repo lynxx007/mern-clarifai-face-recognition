@@ -18,7 +18,7 @@ const App = () => {
 
   const [input, setInput] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [box, setBox] = useState({});
+  const [box, setBox] = useState([]);
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [user, setUser] = useState({
@@ -40,7 +40,6 @@ const App = () => {
   }
 
   const calculateFaceLocation = (data) => {
-    console.log(data.data.predictedConcepts.outputs[0].data.regions)
     let dataRegions = []
     const clarifaiFace = data.data.predictedConcepts.outputs[0].data.regions
     if (Array.isArray(clarifaiFace)) {
@@ -59,7 +58,6 @@ const App = () => {
         bottomRow: height - (item.bottom_row * height)
       })
     })
-    console.log(box)
     return box
   }
 
@@ -78,6 +76,7 @@ const App = () => {
     })
     console.log(response)
     displayFaceBox(calculateFaceLocation(response))
+    setUser(prevUser => ({ ...prevUser, entries: prevUser.entries++ }))
   }
 
 
