@@ -3,23 +3,24 @@ import jwt from 'jsonwebtoken'
 import User from "../models/userModel.js";
 import 'dotenv/config.js'
 const checkAuth = expressAsyncHandler(async (req, res, next) => {
-    let jwt_token
+    try {
+        const token = req.headers.authorization?.split(' ')[1]; // Extract token from the Authorization header
+        if (!token) {
+            throw new Error('Access denied: No token provided');
+        }
 
-    const authHeader = req.headers.authorization || req.headers.Authorization
+        const decodedToken = jwt.verify(token, process.env.JWT_ACCESS_SECRET_KEY);
+        const userId = decodedToken.id;
 
-    if (!authHeader?.startsWith("Bearer")) return res.status(401)
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
 
-    if (authHeader && authHeader.startsWith("Bearer")) {
-        jwt_token = authHeader.split(" ")[1]
-
-        jwt.verify(jwt_token, process.env.JWT_ACCESS_SECRET_KEY,
-            async (error, decoded) => {
-                if (error) return res.status(403)
-
-                const userId = decoded.id
-                req.user - await User.findById(userId).select('-password')
-                next()
-            })
+        req.user = user; // Attach the user object to the request for further use
+        next(); // Proceed to the next middleware or route handler
+    } catch (error) {
+        res.status(401).json({ error: 'Access denied: Invalid token' });
     }
 
 })

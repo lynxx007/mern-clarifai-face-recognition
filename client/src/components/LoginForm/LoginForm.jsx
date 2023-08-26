@@ -19,6 +19,7 @@ const SignIn = ({ loadUser, onRouteChange }) => {
                 email: signInEmail,
                 password: signInPassword
             })
+            console.log(response.data.user);
             loadUser(response.data.user)
             onRouteChange('home')
 

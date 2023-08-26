@@ -26,7 +26,8 @@ const App = () => {
     name: '',
     email: '',
     entries: 0,
-    joined: ''
+    joined: '',
+    token: ''
   });
 
   const loadUser = (data) => {
@@ -35,7 +36,8 @@ const App = () => {
       name: data.fullName,
       email: data.email,
       entries: data.entries,
-      joined: data.createAt
+      joined: data.createAt,
+      token: data.accessToken
     });
   }
 
@@ -72,11 +74,14 @@ const App = () => {
   const onButtonSubmit = async () => {
     setImageUrl(input);
     const response = await axios.get('api/v1/image/predict', {
-      params: { imageUrl: imageUrl }
+      params: { imageUrl: imageUrl },
+      headers: {
+        Authorization: `Bearer ${user.token}`
+      }
     })
     console.log(response)
     displayFaceBox(calculateFaceLocation(response))
-    setUser(prevUser => ({ ...prevUser, entries: prevUser.entries++ }))
+    setUser(prevUser => ({ ...prevUser, entries: response.data.entries }))
   }
 
 
