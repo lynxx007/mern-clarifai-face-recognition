@@ -85,8 +85,9 @@ const App = () => {
   }
 
 
-  const onRouteChange = (route) => {
+  const onRouteChange = async (route) => {
     if (route === 'signout') {
+      await axios.get('api/v1/auth/logout')
       setIsSignedIn(false);
     }
     else if (route === 'home') {
