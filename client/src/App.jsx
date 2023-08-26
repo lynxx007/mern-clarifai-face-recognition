@@ -9,10 +9,9 @@ import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import './App.css';
+import axios from 'axios';
 
-// const app = new Clarifai.App({
-//   apiKey: 'YOUR API KEY HERE'
-// });
+
 
 const App = () => {
 
@@ -40,53 +39,36 @@ const App = () => {
     });
   }
 
-  // const calculateFaceLocation = (data) => {
-  //   const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-  //   const image = document.getElementById('inputimage');
-  //   const width = Number(image.width);
-  //   const height = Number(image.height);
-  //   return {
-  //     leftCol: clarifaiFace.left_col * width,
-  //     topRow: clarifaiFace.top_row * height,
-  //     rightCol: width - (clarifaiFace.right_col * width),
-  //     bottomRow: height - (clarifaiFace.bottom_row * height)
-  //   }
-  // }
+  const calculateFaceLocation = (data) => {
+    const clarifaiFace = data.data.predictedConcepts.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputimage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: clarifaiFace.left_col * width,
+      topRow: clarifaiFace.top_row * height,
+      rightCol: width - (clarifaiFace.right_col * width),
+      bottomRow: height - (clarifaiFace.bottom_row * height)
+    }
+  }
 
-  // const displayFaceBox = (box) => {
-  //   setBox(box);
-  // }
+  const displayFaceBox = (box) => {
+    setBox(box);
+  }
 
   const onInputChange = (event) => {
     setInput(event.target.value);
   }
 
-  const onButtonSubmit = () => {
+  const onButtonSubmit = async () => {
     setImageUrl(input);
+    const response = await axios.get('api/v1/image/predict', {
+      params: { imageUrl: imageUrl }
+    })
+    console.log(response)
+    displayFaceBox(calculateFaceLocation(response))
   }
 
-
-
-
-  //   app.models.predict('face-detection', input)
-  //     .then(response => {
-  //       if (response) {
-  //         fetch('http://localhost:3000/image', {
-  //           method: 'put',
-  //           headers: { 'Content-Type': 'application/json' },
-  //           body: JSON.stringify({
-  //             id: user.id
-  //           })
-  //         })
-  //           .then(response => response.json())
-  //           .then(count => {
-  //             setUser(prevUser => ({ ...prevUser, entries: count }));
-  //           });
-  //       }
-  //       displayFaceBox(calculateFaceLocation(response));
-  //     })
-  //     .catch(err => console.log(err));
-  // }
 
   const onRouteChange = (route) => {
     if (route === 'signout') {

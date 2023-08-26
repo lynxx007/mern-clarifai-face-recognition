@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoutes.js'
 import { fileURLToPath } from 'url';
 import path from 'path';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js'
+import predictRoutes from './routes/imageRoutes.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,8 @@ app.use(mongoSanitize())
 
 
 app.use('/api/v1/auth', authRoutes)
+
+app.use('/api/v1/image', predictRoutes)
 
 
 
