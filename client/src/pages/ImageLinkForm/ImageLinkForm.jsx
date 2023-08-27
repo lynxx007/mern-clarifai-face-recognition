@@ -13,7 +13,7 @@ const ImageLinkForm = () => {
     }
 
     const onButtonSubmit = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
         submitImg(input)
 
 

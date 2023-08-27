@@ -1,3 +1,4 @@
+import ParticlesBg from 'particles-bg';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './utils/protectedRoute';
@@ -11,6 +12,7 @@ import { Layout } from './pages/Layout/Layout';
 const App = () => {
   return (
     <BrowserRouter>
+      <ParticlesBg type="fountain" bg={true} />
       <Routes>
         <Route path='/' element={<ProtectedRoute><Layout /></ProtectedRoute>}>
           <Route index element={<ImageLinkForm />} />
