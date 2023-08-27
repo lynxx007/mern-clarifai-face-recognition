@@ -1,10 +1,13 @@
-import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AppContext } from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
-const Register = ({ loadUser, onRouteChange }) => {
+const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate()
+    const { registerUser } = useContext(AppContext)
 
     const onNameChange = (event) => {
         setName(event.target.value);
@@ -19,17 +22,8 @@ const Register = ({ loadUser, onRouteChange }) => {
     };
 
     const onSubmitSignIn = async () => {
-        try {
-            const response = await axios.post('api/v1/auth/register', {
-                email: email,
-                fullName: name,
-                password: password
-            })
-            loadUser(response.data.user)
-            onRouteChange('home')
-        } catch (error) {
-            console.error(error)
-        }
+        registerUser(email, name, password)
+        navigate('/login')
 
 
     };

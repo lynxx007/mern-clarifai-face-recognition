@@ -1,16 +1,21 @@
+import { useContext } from "react";
+import { AppContext } from "../../context/AppContext";
+import { Link } from "react-router-dom";
 
-const Navigation = ({ onRouteChange, isSignedIn }) => {
-    if (isSignedIn) {
+const Navigation = () => {
+    const { isLogin, logoutUser } = useContext(AppContext)
+
+    if (isLogin) {
         return (
             <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <p onClick={() => onRouteChange('signout')} className='f3 link dim black underline pa3 pointer'>Sign Out</p>
+                <Link onClick={() => logoutUser()} to='/login' className='f3 link dim black underline pa3 pointer'>Sign Out</Link>
             </nav>
         );
     } else {
         return (
             <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <p onClick={() => onRouteChange('signin')} className='f3 link dim black underline pa3 pointer'>Sign In</p>
-                <p onClick={() => onRouteChange('register')} className='f3 link dim black underline pa3 pointer'>Register</p>
+                <Link to='/login' className='f3 link dim black underline pa3 pointer'>Sign In</Link>
+                <Link to='/register' className='f3 link dim black underline pa3 pointer'>Register</Link>
             </nav>
         );
     }

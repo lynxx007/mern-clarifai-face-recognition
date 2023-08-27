@@ -1,10 +1,13 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../../context/AppContext';
 
-const SignIn = ({ loadUser, onRouteChange }) => {
+const SignIn = () => {
     const [signInEmail, setSignInEmail] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
-
+    const navigate = useNavigate()
+    const { loginUser, displayAlert, hideAlert, isLogin } = useContext(AppContext)
     const onEmailChange = (event) => {
         setSignInEmail(event.target.value);
     };
@@ -13,20 +16,22 @@ const SignIn = ({ loadUser, onRouteChange }) => {
         setSignInPassword(event.target.value);
     };
 
-    const onSubmitSignIn = async () => {
-        try {
-            const response = await axios.post('api/v1/auth/login', {
-                email: signInEmail,
-                password: signInPassword
-            })
-            console.log(response.data.user);
-            loadUser(response.data.user)
-            onRouteChange('home')
-
-        } catch (error) {
-            console.log(error);
+    const onSubmitSignIn = async (e) => {
+        e.preventDefault()
+        if (signInEmail === '' || signInPassword === '') {
+            displayAlert()
+            setTimeout(hideAlert, 3000)
+            return
         }
+        loginUser(signInEmail, signInPassword)
+
     };
+
+    useEffect(() => {
+        if (isLogin) {
+            navigate('/')
+        }
+    }, [isLogin, navigate])
 
     return (
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
@@ -68,16 +73,17 @@ const SignIn = ({ loadUser, onRouteChange }) => {
                         />
                     </div>
                     <div className="lh-copy mt3">
-                        <p
-                            onClick={() => onRouteChange('register')}
+                        <Link
+                            to='/register'
                             className="f6 link dim black db pointer"
                         >
                             Register
-                        </p>
+                        </Link>
                     </div>
                 </div>
             </main>
         </article>
+
     );
 };
 

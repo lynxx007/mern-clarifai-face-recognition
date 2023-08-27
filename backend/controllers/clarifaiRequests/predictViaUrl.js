@@ -31,10 +31,6 @@ export const clarifaiApiCallUrl = async (imageUrl) => {
                 if (response.status.code !== 10000) {
                     reject(new Error("Post model outputs failed, status: " + response.status.description));
                 }
-                console.log(response)
-
-
-
                 resolve(response);
             }
         );

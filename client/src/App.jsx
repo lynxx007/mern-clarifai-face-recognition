@@ -1,126 +1,24 @@
-import { useState } from 'react';
-import ParticlesBg from 'particles-bg';
-// import Clarifai from 'clarifai';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import Navigation from './components/Navigation/Navigation';
-import SignIn from './components/LoginForm/LoginForm';
-import Register from './components/RegisterForm/RegisterForm';
-import Logo from './components/Logo/Logo';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import Rank from './components/Rank/Rank';
-import './App.css';
-import axios from 'axios';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ProtectedRoute } from './utils/protectedRoute';
+import ImageLinkForm from './pages/ImageLinkForm/ImageLinkForm';
+import LoginForm from './pages/LoginForm/LoginForm'
+import RegisterForm from './pages/RegisterForm/RegisterForm'
+import { Layout } from './pages/Layout/Layout';
 
 
 
 const App = () => {
-
-
-  const [input, setInput] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [box, setBox] = useState([]);
-  const [route, setRoute] = useState('signin');
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({
-    id: '',
-    name: '',
-    email: '',
-    entries: 0,
-    joined: '',
-    token: ''
-  });
-
-  const loadUser = (data) => {
-    setUser({
-      id: data.id,
-      name: data.fullName,
-      email: data.email,
-      entries: data.entries,
-      joined: data.createAt,
-      token: data.accessToken
-    });
-  }
-
-  const calculateFaceLocation = (data) => {
-    let dataRegions = []
-    const clarifaiFace = data.data.predictedConcepts.outputs[0].data.regions
-    if (Array.isArray(clarifaiFace)) {
-      clarifaiFace.forEach(item => dataRegions.push(item.region_info.bounding_box))
-    }
-
-    const image = document.getElementById('inputimage');
-    let box = []
-    const width = Number(image.width);
-    const height = Number(image.height);
-    dataRegions.forEach(item => {
-      box.push({
-        leftCol: item.left_col * width,
-        topRow: item.top_row * height,
-        rightCol: width - (item.right_col * width),
-        bottomRow: height - (item.bottom_row * height)
-      })
-    })
-    return box
-  }
-
-  const displayFaceBox = (box) => {
-    setBox(box);
-  }
-
-  const onInputChange = (event) => {
-    setInput(event.target.value);
-  }
-
-  const onButtonSubmit = async () => {
-    setImageUrl(input);
-    const response = await axios.get('api/v1/image/predict', {
-      params: { imageUrl: imageUrl },
-      headers: {
-        Authorization: `Bearer ${user.token}`
-      }
-    })
-    console.log(response)
-    displayFaceBox(calculateFaceLocation(response))
-    setUser(prevUser => ({ ...prevUser, entries: response.data.entries }))
-  }
-
-
-  const onRouteChange = async (route) => {
-    if (route === 'signout') {
-      await axios.get('api/v1/auth/logout')
-      setIsSignedIn(false);
-    }
-    else if (route === 'home') {
-      setIsSignedIn(true);
-    }
-    setRoute(route);
-  }
-
   return (
-    <div className="App">
-      <ParticlesBg type="fountain" bg={true} />
-      <Navigation isSignedIn={isSignedIn} onRouteChange={onRouteChange} />
-      {route === 'home'
-        ? <div>
-          <Logo />
-          <Rank
-            name={user.name}
-            entries={user.entries}
-          />
-          <ImageLinkForm
-            onInputChange={onInputChange}
-            onButtonSubmit={onButtonSubmit}
-
-          />
-          <FaceRecognition box={box} imageUrl={imageUrl} />
-        </div>
-        : (
-          route === 'signin'
-            ? <SignIn loadUser={loadUser} onRouteChange={onRouteChange} />
-            : <Register loadUser={loadUser} onRouteChange={onRouteChange} />
-        )
-      }
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+          <Route index element={<ImageLinkForm />} />
+        </Route>
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/register' element={<RegisterForm />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
