@@ -7,7 +7,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate()
-    const { registerUser } = useContext(AppContext)
+    const { registerUser, displayAlert, hideAlert } = useContext(AppContext)
 
     const onNameChange = (event) => {
         setName(event.target.value);
@@ -21,9 +21,15 @@ const Register = () => {
         setPassword(event.target.value);
     };
 
-    const onSubmitSignIn = async () => {
+    const onSubmitSignIn = (e) => {
+        e.preventDefault()
+        if (name === '' || password === '' || email === '') {
+            displayAlert()
+            setTimeout(hideAlert, 3000)
+            return
+        }
         registerUser(email, name, password)
-        navigate('/login')
+        navigate('/')
 
 
     };

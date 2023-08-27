@@ -63,7 +63,8 @@ export const appReducer = (state = initialState, action) => {
                 joined: action.payload.createAt,
                 isLogin: true,
                 alertText: 'Register successfully!',
-                showAlert: true
+                showAlert: true,
+                token: action.payload.accessToken
             }
         case APP_ACTION_TYPE.REGISTER_USER_FAIL:
             return {
@@ -143,8 +144,8 @@ export const AppProvider = ({ children }) => {
                 fullName: fullNameUser,
                 password
             })
-            const { id, fullName, email, entries, createAt } = response.data.user
-            dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_SUCCESS, { id, fullName, entries, createAt, email }))
+            const { id, fullName, email, entries, createAt, accessToken } = response.data.user
+            dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_SUCCESS, { id, fullName, entries, createAt, email, accessToken }))
         } catch (error) {
             dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_FAIL))
         }

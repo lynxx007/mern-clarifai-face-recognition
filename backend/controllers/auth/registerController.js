@@ -1,5 +1,6 @@
 import expressAsyncHandler from "express-async-handler";
 import User from "../../models/userModel.js";
+import jwt from 'jsonwebtoken'
 import 'dotenv/config'
 
 const registerUser = expressAsyncHandler(async (req, res) => {
@@ -40,6 +41,10 @@ const registerUser = expressAsyncHandler(async (req, res) => {
         throw new Error('Something went wrong')
     }
 
+    const accessToken = jwt.sign({ id: registeredUser._id }, process.env.JWT_ACCESS_SECRET_KEY, {
+        expiresIn: '1h'
+    })
+
     res.json({
         success: true,
         message: "A new user has been registered",
@@ -49,6 +54,7 @@ const registerUser = expressAsyncHandler(async (req, res) => {
             email: registeredUser.email,
             entries: registeredUser.entries,
             createAt: registeredUser.createdAt,
+            accessToken
         }
     })
 })
