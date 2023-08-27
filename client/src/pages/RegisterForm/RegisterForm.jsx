@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -84,6 +84,14 @@ const Register = () => {
                             type="submit"
                             value="Register"
                         />
+                    </div>
+                    <div className="lh-copy mt3">
+                        <Link
+                            to='/login'
+                            className="f6 link dim black db pointer"
+                        >
+                            Login
+                        </Link>
                     </div>
                 </div>
             </main>
