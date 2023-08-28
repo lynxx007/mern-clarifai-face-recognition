@@ -14,11 +14,12 @@ const ImageLinkForm = () => {
     }
 
     const onButtonSubmit = (e) => {
-        const newInput = e.target.value;
-        submitImg(newInput)
-        setShowFaceComponent(newInput !== '')
-
-
+        // e.preventDefault()
+        submitImg(input)
+        setShowFaceComponent(true)
+        if (input.length === 0) {
+            setShowFaceComponent(false)
+        }
     }
     return (
 
