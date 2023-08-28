@@ -7,6 +7,7 @@ import { AppContext } from '../../context/AppContext';
 const ImageLinkForm = () => {
     const [input, setInput] = useState('')
     const { submitImg, box, entries, name } = useContext(AppContext)
+    const [showFaceComponent, setShowFaceComponent] = useState(false)
 
     const handleInputChange = e => {
         setInput(e.target.value)
@@ -15,6 +16,7 @@ const ImageLinkForm = () => {
     const onButtonSubmit = (e) => {
         // e.preventDefault()
         submitImg(input)
+        setShowFaceComponent(true)
 
 
     }
@@ -35,7 +37,8 @@ const ImageLinkForm = () => {
                     >Detect</button>
                 </div>
             </div>
-            <FaceRecognition imageUrl={input} box={box} />
+            {showFaceComponent && <FaceRecognition imageUrl={input} box={box} />}
+
         </div >
     );
 }
