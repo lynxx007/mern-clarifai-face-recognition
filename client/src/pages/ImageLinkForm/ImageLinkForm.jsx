@@ -11,16 +11,18 @@ const ImageLinkForm = () => {
 
     const handleInputChange = e => {
         setInput(e.target.value)
-    }
-
-    const onButtonSubmit = (e) => {
-        // e.preventDefault()
-        submitImg(input)
-        setShowFaceComponent(true)
         if (input.length === 0) {
             setShowFaceComponent(false)
         }
     }
+
+    const onButtonSubmit = (e) => {
+        e.preventDefault()
+        submitImg(input)
+        setShowFaceComponent(true)
+
+    }
+
     return (
 
         <div>
