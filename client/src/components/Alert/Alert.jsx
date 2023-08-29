@@ -3,7 +3,7 @@ import { Alert, AlertTitle, AlertDescription } from '../../../components/ui/aler
 
 export function AlertDemo({ text }) {
     return (
-        <Alert>
+        <Alert className="bg-primary">
             <Terminal className="h-4 w-4" />
             <AlertTitle>Info!</AlertTitle>
             <AlertDescription>

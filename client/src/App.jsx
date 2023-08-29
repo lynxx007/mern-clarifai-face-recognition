@@ -6,7 +6,7 @@ import ImageLinkForm from './pages/ImageLinkForm/ImageLinkForm';
 import LoginForm from './pages/LoginForm/LoginForm'
 import RegisterForm from './pages/RegisterForm/RegisterForm'
 import { Layout } from './pages/Layout/Layout';
-import { Error } from './pages/Error/Error';
+import Error from './pages/Error/Error';
 
 
 
