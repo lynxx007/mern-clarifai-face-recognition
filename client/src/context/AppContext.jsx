@@ -71,7 +71,7 @@ export const appReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 showAlert: true,
-                alertText: 'Something went wrong, Try it again.'
+                alertText: 'Something went wrong or might be the email has been associated from other account, Try it again.'
             }
         case APP_ACTION_TYPE.LOGIN_USER_START:
             return {
@@ -148,6 +148,7 @@ export const AppProvider = ({ children }) => {
             dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_SUCCESS, { id, fullName, entries, createAt, email, accessToken }))
         } catch (error) {
             dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_FAIL))
+            setTimeout(hideAlert, 3000)
         }
     }
 
@@ -167,6 +168,7 @@ export const AppProvider = ({ children }) => {
     const logoutUser = async () => {
         await axios.get('api/v1/auth/logout')
         dispatch(createAction(APP_ACTION_TYPE.LOGOUT_USER))
+        setTimeout(hideAlert, 3000)
     }
 
     const submitImg = async (imageUrl) => {

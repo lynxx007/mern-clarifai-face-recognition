@@ -1,13 +1,14 @@
 import { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { AlertDestructive } from '../../components/Alert/Alert';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate()
-    const { registerUser, displayAlert, hideAlert } = useContext(AppContext)
+    const { registerUser, displayAlert, hideAlert, showAlert, alertText } = useContext(AppContext)
 
     const onNameChange = (event) => {
         setName(event.target.value);
@@ -29,7 +30,6 @@ const Register = () => {
             return
         }
         registerUser(email, name, password)
-        navigate('/')
 
 
     };
@@ -37,6 +37,7 @@ const Register = () => {
     return (
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
             <main className="pa4 black-80">
+                {showAlert && <AlertDestructive text={alertText} />}
                 <div className="measure">
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                         <legend className="f1 fw6 ph0 mh0">Register</legend>

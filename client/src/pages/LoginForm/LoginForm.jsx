@@ -2,12 +2,13 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
+import { AlertDemo } from '../../components/Alert/Alert';
 
 const SignIn = () => {
     const [signInEmail, setSignInEmail] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const navigate = useNavigate()
-    const { loginUser, displayAlert, hideAlert, isLogin } = useContext(AppContext)
+    const { loginUser, displayAlert, hideAlert, showAlert, isLogin, alertText } = useContext(AppContext)
     const onEmailChange = (event) => {
         setSignInEmail(event.target.value);
     };
@@ -36,6 +37,7 @@ const SignIn = () => {
     return (
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
             <main className="pa4 black-80">
+                {showAlert && <AlertDemo text={alertText} />}
                 <div className="measure">
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                         <legend className="f1 fw6 ph0 mh0">Sign In</legend>
