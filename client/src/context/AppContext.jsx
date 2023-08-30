@@ -28,7 +28,7 @@ export const APP_ACTION_TYPE = {
     LOGIN_USER_SUCCESS: 'LOGIN_USER_SUCCESS',
     LOGIN_USER_FAIL: 'LOGIN_USER_FAIL',
     LOGOUT_USER: 'LOGOUT_USER',
-    SUBMIT_IMG: 'SUBMIT_IMG'
+    SUBMIT_IMG: 'SUBMIT_IMG',
 }
 
 export const AppContext = createContext()
@@ -184,6 +184,7 @@ export const AppProvider = ({ children }) => {
 
         dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG, { entries, calculatedFaceLocation }))
     }
+
 
     const value = {
         ...state,

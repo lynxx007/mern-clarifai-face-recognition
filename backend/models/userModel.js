@@ -1,7 +1,8 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
-
+import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 const { Schema } = mongoose
 
 const userSchema = new Schema({
@@ -28,7 +29,6 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
-    refreshToken: [String]
 }, {
     timestamps: true
 })
@@ -42,6 +42,12 @@ userSchema.pre('save', async function (next) {
     next()
 })
 
+
+userSchema.methods.createJWT = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_ACCESS_SECRET_KEY, {
+        expiresIn: process.env.JWT_LIFETIME
+    })
+}
 userSchema.methods.comparePassword = async function (givenPassword) {
     return await bcrypt.compare(givenPassword, this.password)
 }

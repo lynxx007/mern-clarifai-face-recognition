@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js'
 import predictRoutes from './routes/imageRoutes.js'
-import checkAuth from './middlewares/checkAuthMiddleware.js'
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +29,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(express.json())
+
+
 
 
 app.use(mongoSanitize())
