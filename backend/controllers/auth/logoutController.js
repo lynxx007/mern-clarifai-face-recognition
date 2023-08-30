@@ -2,33 +2,11 @@ import expressAsyncHandler from "express-async-handler";
 import User from '../../models/userModel.js'
 
 const logoutUser = expressAsyncHandler(async (req, res) => {
-    const cookies = req.cookies
 
-    if (!cookies?.jwt) {
-        res.status(204)
-        throw new Error('No cookies')
-    }
-
-    const refreshToken = cookies.jwt
-
-    const existingUser = await User.findOne({ refreshToken })
-
-    if (!existingUser) {
-        res.clearCookie('jwt', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'none'
-        })
-        res.status(204)
-    }
-
-    existingUser.refreshToken = existingUser.refreshToken.filter(token => token !== refreshToken)
-    await existingUser.save()
-
-    res.clearCookie('jwt', {
+    res.cookie('token', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none'
+        expires: new Date(0),
+        sameSite: 'strict'
     })
 
     res.status(200).json({

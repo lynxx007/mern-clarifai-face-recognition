@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { createAction } from "../utils/actionCreator";
 import axios from 'axios'
 import { calculateFaceLocation } from "../utils/calculateFaceLocation";
@@ -119,6 +119,7 @@ export const appReducer = (state = initialState, action) => {
                 entries: action.payload.entries,
                 box: action.payload.calculatedFaceLocation
             }
+
         default:
             throw new Error(`unhandled type ${action.type}`)
     }
@@ -184,6 +185,7 @@ export const AppProvider = ({ children }) => {
 
         dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG, { entries, calculatedFaceLocation }))
     }
+
 
 
     const value = {
