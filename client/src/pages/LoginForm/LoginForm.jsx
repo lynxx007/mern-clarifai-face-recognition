@@ -1,13 +1,19 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import { AlertDemo } from '../../components/Alert/Alert';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
+import { Label } from '@/components/ui/label';
 
 const SignIn = () => {
     const [signInEmail, setSignInEmail] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const navigate = useNavigate()
+    const { toast } = useToast()
+
+
     const { loginUser, displayAlert, hideAlert, showAlert, isLogin, alertText } = useContext(AppContext)
     const onEmailChange = (event) => {
         setSignInEmail(event.target.value);
@@ -26,6 +32,11 @@ const SignIn = () => {
         }
         loginUser(signInEmail, signInPassword)
 
+        toast({
+            description: "Login successfully."
+        })
+
+
     };
 
     useEffect(() => {
@@ -42,10 +53,10 @@ const SignIn = () => {
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                         <legend className="f1 fw6 ph0 mh0">Sign In</legend>
                         <div className="mt3">
-                            <label className="db fw6 lh-copy f6" htmlFor="email-address">
+                            <Label className="db fw6 lh-copy f6" htmlFor="email-address">
                                 Email
-                            </label>
-                            <input
+                            </Label>
+                            <Input
                                 className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                                 type="email"
                                 name="email-address"
@@ -54,10 +65,10 @@ const SignIn = () => {
                             />
                         </div>
                         <div className="mv3">
-                            <label className="db fw6 lh-copy f6" htmlFor="password">
+                            <Label className="db fw6 lh-copy f6" htmlFor="password">
                                 Password
-                            </label>
-                            <input
+                            </Label>
+                            <Input
                                 className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                                 type="password"
                                 name="password"
@@ -67,7 +78,7 @@ const SignIn = () => {
                         </div>
                     </fieldset>
                     <div className="">
-                        <input
+                        <Input
                             onClick={onSubmitSignIn}
                             className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                             type="submit"

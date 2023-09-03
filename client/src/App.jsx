@@ -7,7 +7,7 @@ import LoginForm from './pages/LoginForm/LoginForm'
 import RegisterForm from './pages/RegisterForm/RegisterForm'
 import { Layout } from './pages/Layout/Layout';
 import Error from './pages/Error/Error';
-
+import { Toaster } from './components/ui/toaster';
 
 
 const App = () => {
@@ -22,7 +22,9 @@ const App = () => {
         <Route path='/register' element={<RegisterForm />} />
         <Route path='*' element={<Error />} />
       </Routes>
+      <Toaster />
     </BrowserRouter>
+
   );
 }
 

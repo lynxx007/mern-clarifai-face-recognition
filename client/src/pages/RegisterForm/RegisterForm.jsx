@@ -1,13 +1,15 @@
 import { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AlertDestructive } from '../../components/Alert/Alert';
+import { useToast } from '@/components/ui/use-toast';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate()
+    const { toast } = useToast()
+
     const { registerUser, displayAlert, hideAlert, showAlert, alertText } = useContext(AppContext)
 
     const onNameChange = (event) => {
@@ -30,6 +32,10 @@ const Register = () => {
             return
         }
         registerUser(email, name, password)
+
+        toast({
+            description: 'Registered succesfully.'
+        })
 
 
     };

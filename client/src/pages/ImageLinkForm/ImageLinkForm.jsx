@@ -6,10 +6,12 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { AlertDestructive } from '@/components/Alert/Alert';
+
 
 const ImageLinkForm = () => {
     const [input, setInput] = useState('')
-    const { submitImg, box, entries, name, isLoading } = useContext(AppContext)
+    const { submitImg, box, entries, name, isLoading, showAlert, alertText } = useContext(AppContext)
     const [showFaceComponent, setShowFaceComponent] = useState(false)
 
     const handleInputChange = e => {
@@ -40,6 +42,7 @@ const ImageLinkForm = () => {
                     <Button disabled={isLoading} onClick={onButtonSubmit} type="submit">Detect</Button>
                 </div>
             </div>
+            {showAlert && <AlertDestructive text={alertText} />}
             {showFaceComponent && <FaceRecognition imageUrl={input} box={box} />}
 
         </div >

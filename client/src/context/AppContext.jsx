@@ -29,6 +29,7 @@ export const APP_ACTION_TYPE = {
     LOGOUT_USER: 'LOGOUT_USER',
     SUBMIT_IMG: 'SUBMIT_IMG',
     SUBMIT_IMG_START: 'SUBMIT_IMG_START',
+    SUBMIT_IMG_FAIL: 'SUBMIT_IMG_FAIL',
     GET_CURRENT_USER_START: 'GET_CURRENT_USER_START',
     GET_CURRENT_USER_SUCCESS: 'GET_CURRENT_USER_SUCCESS',
 }
@@ -64,8 +65,6 @@ export const appReducer = (state = initialState, action) => {
                 entries: action.payload.entries,
                 joined: action.payload.createAt,
                 isLogin: true,
-                alertText: 'Register successfully!',
-                showAlert: true,
             }
         case APP_ACTION_TYPE.REGISTER_USER_FAIL:
             return {
@@ -89,8 +88,6 @@ export const appReducer = (state = initialState, action) => {
                 entries: action.payload.entries,
                 joined: action.payload.createAt,
                 isLogin: true,
-                showAlert: true,
-                alertText: 'Login successfully!'
             }
         case APP_ACTION_TYPE.LOGIN_USER_FAIL:
             return {
@@ -109,8 +106,6 @@ export const appReducer = (state = initialState, action) => {
                 joined: '',
                 isLogin: false,
                 isLoading: false,
-                showAlert: true,
-                alertText: 'Logout successfully!'
             }
         case APP_ACTION_TYPE.SUBMIT_IMG:
             return {
@@ -123,6 +118,13 @@ export const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
+            }
+        case APP_ACTION_TYPE.SUBMIT_IMG_FAIL:
+            return {
+                ...state,
+                isLoading: false,
+                alertText: 'Theres an error with the server, you could try again or could change another image.',
+                showAlert: true
             }
         case APP_ACTION_TYPE.GET_CURRENT_USER_START:
             return {
@@ -139,8 +141,6 @@ export const appReducer = (state = initialState, action) => {
                 entries: action.payload.entries,
                 joined: action.payload.createAt,
                 isLogin: true,
-                showAlert: true,
-                alertText: 'Login successfully!'
             }
 
         default:
@@ -186,6 +186,7 @@ export const AppProvider = ({ children }) => {
             dispatch(createAction(APP_ACTION_TYPE.LOGIN_USER_SUCCESS, { id, email, entries, fullName, createAt }))
         } catch (error) {
             dispatch(createAction(APP_ACTION_TYPE.LOGIN_USER_FAIL))
+
         }
     }
 
@@ -197,13 +198,21 @@ export const AppProvider = ({ children }) => {
 
     const submitImg = async (imageUrl) => {
         dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_START))
-        const response = await axios.get('api/v1/image/predict', {
-            params: { imageUrl: imageUrl },
-        })
-        const { entries } = response.data
-        const calculatedFaceLocation = calculateFaceLocation(response)
 
-        dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG, { entries, calculatedFaceLocation }))
+        try {
+            const response = await axios.get('api/v1/image/predict', {
+                params: { imageUrl: imageUrl },
+            })
+            const { entries } = response.data
+            const calculatedFaceLocation = calculateFaceLocation(response)
+
+            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG, { entries, calculatedFaceLocation }))
+        } catch (error) {
+            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_FAIL))
+            setTimeout(hideAlert, 3000)
+        }
+
+
     }
 
     const getCurrentUser = async () => {
