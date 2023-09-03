@@ -10,7 +10,6 @@ const initialState = {
     email: '',
     entries: '',
     joined: '',
-    token: '',
     isLoading: false,
     showAlert: false,
     alertText: '',
@@ -29,6 +28,9 @@ export const APP_ACTION_TYPE = {
     LOGIN_USER_FAIL: 'LOGIN_USER_FAIL',
     LOGOUT_USER: 'LOGOUT_USER',
     SUBMIT_IMG: 'SUBMIT_IMG',
+    SUBMIT_IMG_START: 'SUBMIT_IMG_START',
+    GET_CURRENT_USER_START: 'GET_CURRENT_USER_START',
+    GET_CURRENT_USER_SUCCESS: 'GET_CURRENT_USER_SUCCESS',
 }
 
 export const AppContext = createContext()
@@ -64,7 +66,6 @@ export const appReducer = (state = initialState, action) => {
                 isLogin: true,
                 alertText: 'Register successfully!',
                 showAlert: true,
-                token: action.payload.accessToken
             }
         case APP_ACTION_TYPE.REGISTER_USER_FAIL:
             return {
@@ -87,7 +88,6 @@ export const appReducer = (state = initialState, action) => {
                 name: action.payload.fullName,
                 entries: action.payload.entries,
                 joined: action.payload.createAt,
-                token: action.payload.accessToken,
                 isLogin: true,
                 showAlert: true,
                 alertText: 'Login successfully!'
@@ -103,7 +103,6 @@ export const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 id: '',
-                token: '',
                 email: '',
                 name: '',
                 entries: '',
@@ -117,7 +116,31 @@ export const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 entries: action.payload.entries,
-                box: action.payload.calculatedFaceLocation
+                box: action.payload.calculatedFaceLocation,
+                isLoading: false
+            }
+        case APP_ACTION_TYPE.SUBMIT_IMG_START:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case APP_ACTION_TYPE.GET_CURRENT_USER_START:
+            return {
+                ...state,
+                isLoading: true,
+            }
+        case APP_ACTION_TYPE.GET_CURRENT_USER_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                id: action.payload.id,
+                email: action.payload.email,
+                name: action.payload.fullName,
+                entries: action.payload.entries,
+                joined: action.payload.createAt,
+                isLogin: true,
+                showAlert: true,
+                alertText: 'Login successfully!'
             }
 
         default:
@@ -145,8 +168,8 @@ export const AppProvider = ({ children }) => {
                 fullName: fullNameUser,
                 password
             })
-            const { id, fullName, email, entries, createAt, accessToken } = response.data.user
-            dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_SUCCESS, { id, fullName, entries, createAt, email, accessToken }))
+            const { id, fullName, email, entries, createAt } = response.data.user
+            dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_SUCCESS, { id, fullName, entries, createAt, email }))
         } catch (error) {
             dispatch(createAction(APP_ACTION_TYPE.REGISTER_USER_FAIL))
             setTimeout(hideAlert, 3000)
@@ -159,8 +182,8 @@ export const AppProvider = ({ children }) => {
             const response = await axios.post('api/v1/auth/login', {
                 email: emailUser, password: passwordUser
             })
-            const { id, email, entries, fullName, accessToken, createAt } = response.data.user
-            dispatch(createAction(APP_ACTION_TYPE.LOGIN_USER_SUCCESS, { id, email, entries, fullName, accessToken, createAt }))
+            const { id, email, entries, fullName, createAt } = response.data.user
+            dispatch(createAction(APP_ACTION_TYPE.LOGIN_USER_SUCCESS, { id, email, entries, fullName, createAt }))
         } catch (error) {
             dispatch(createAction(APP_ACTION_TYPE.LOGIN_USER_FAIL))
         }
@@ -173,18 +196,30 @@ export const AppProvider = ({ children }) => {
     }
 
     const submitImg = async (imageUrl) => {
-
+        dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_START))
         const response = await axios.get('api/v1/image/predict', {
             params: { imageUrl: imageUrl },
-            headers: {
-                Authorization: `Bearer ${state.token}`
-            }
         })
         const { entries } = response.data
         const calculatedFaceLocation = calculateFaceLocation(response)
 
         dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG, { entries, calculatedFaceLocation }))
     }
+
+    const getCurrentUser = async () => {
+        dispatch(createAction(APP_ACTION_TYPE.GET_CURRENT_USER_START))
+        try {
+            const response = await axios.get('api/v1/auth/getCurrentUser')
+            const { id, email, entries, fullName, createAt } = response.data.user
+            dispatch(createAction(APP_ACTION_TYPE.GET_CURRENT_USER_SUCCESS, { id, email, entries, fullName, createAt }))
+        } catch (error) {
+            if (error.response.status === 401) return
+            logoutUser()
+        }
+    }
+    useEffect(() => {
+        getCurrentUser()
+    }, [])
 
 
 

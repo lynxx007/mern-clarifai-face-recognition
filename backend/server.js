@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js'
 import predictRoutes from './routes/imageRoutes.js'
+import cookieParser from 'cookie-parser'
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +18,8 @@ const __dirname = path.dirname(__filename);
 await connectDb()
 
 const app = express()
+
+app.use(cookieParser())
 
 app.use("/", express.static(path.join(__dirname, '..', 'client')));
 

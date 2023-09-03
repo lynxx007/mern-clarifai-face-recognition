@@ -1,5 +1,5 @@
 import { Terminal, Waves, AlertCircle } from 'lucide-react'
-import { Alert, AlertTitle, AlertDescription } from '../../../components/ui/alert'
+import { Alert, AlertTitle, AlertDescription } from '../ui/alert'
 
 export function AlertDemo({ text }) {
     return (

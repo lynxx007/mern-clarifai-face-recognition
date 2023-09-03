@@ -4,9 +4,12 @@ import Rank from '../../components/Rank/Rank'
 import FaceRecognition from '../../components/FaceRecognition/FaceRecognition'
 import { useContext, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+
 const ImageLinkForm = () => {
     const [input, setInput] = useState('')
-    const { submitImg, box, entries, name } = useContext(AppContext)
+    const { submitImg, box, entries, name, isLoading } = useContext(AppContext)
     const [showFaceComponent, setShowFaceComponent] = useState(false)
 
     const handleInputChange = e => {
@@ -31,13 +34,10 @@ const ImageLinkForm = () => {
             <p className='f3'>
                 {'This Magic Brain will detect faces in your pictures. Git it a try.'}
             </p>
-            <div className='center'>
-                <div className='form center pa4 br3 shadow-5'>
-                    <input className='f4 pa2 w-70 center' placeholder='URL image that contains a face' type='text' onChange={handleInputChange} />
-                    <button
-                        className='w-30 grow f4 link ph3 pv2 dib white bg-light-purple'
-                        onClick={onButtonSubmit}
-                    >Detect</button>
+            <div className='center mt-10'>
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                    <Input onChange={handleInputChange} type="text" placeholder="URL Image that contains the face" />
+                    <Button disabled={isLoading} onClick={onButtonSubmit} type="submit">Detect</Button>
                 </div>
             </div>
             {showFaceComponent && <FaceRecognition imageUrl={input} box={box} />}
