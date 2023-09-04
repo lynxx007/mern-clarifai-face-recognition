@@ -2,6 +2,7 @@ import { createContext, useEffect, useReducer } from "react";
 import { createAction } from "../utils/actionCreator";
 import axios from 'axios'
 import { calculateFaceLocation } from "../utils/calculateFaceLocation";
+import { APP_ACTION_TYPE } from "./ActionType";
 
 
 const initialState = {
@@ -17,26 +18,10 @@ const initialState = {
     isLogin: false
 }
 
-export const APP_ACTION_TYPE = {
-    SET_ALERT: 'SHOW_ALERT',
-    HIDE_ALERT: 'HIDE_ALERT',
-    REGISTER_USER_START: 'REGISTER_USER_START',
-    REGISTER_USER_SUCCESS: 'REGISTER_USER_SUCCESS',
-    REGISTER_USER_FAIL: 'REGISTER_USER_FAIL',
-    LOGIN_USER_START: 'LOGIN_USER_START',
-    LOGIN_USER_SUCCESS: 'LOGIN_USER_SUCCESS',
-    LOGIN_USER_FAIL: 'LOGIN_USER_FAIL',
-    LOGOUT_USER: 'LOGOUT_USER',
-    SUBMIT_IMG: 'SUBMIT_IMG',
-    SUBMIT_IMG_START: 'SUBMIT_IMG_START',
-    SUBMIT_IMG_FAIL: 'SUBMIT_IMG_FAIL',
-    GET_CURRENT_USER_START: 'GET_CURRENT_USER_START',
-    GET_CURRENT_USER_SUCCESS: 'GET_CURRENT_USER_SUCCESS',
-}
 
 export const AppContext = createContext()
 
-export const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action) => {
     switch (action.type) {
         case APP_ACTION_TYPE.SET_ALERT:
             return {
