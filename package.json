@@ -13,7 +13,6 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "clarifai": "^2.9.1",
     "clarifai-nodejs-grpc": "^9.7.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
