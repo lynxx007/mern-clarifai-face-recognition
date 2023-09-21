@@ -3,7 +3,10 @@ import { useState, useEffect, useRef } from 'react';
 
 export const Camera = () => {
     const [webcamStream, setWebcamStream] = useState(null);
+    const [capturedImageData, setCapturedImageData] = useState(null);
     const videoRef = useRef(null);
+
+    console.log(capturedImageData);
 
     // Function to start the webcam
     const startWebcam = async () => {
@@ -22,6 +25,21 @@ export const Camera = () => {
                 track.stop();
             });
             setWebcamStream(null);
+        }
+    };
+
+    // Function to capture the image from the webcam
+    const captureImage = () => {
+        if (webcamStream) {
+            const videoElement = videoRef.current;
+            const canvas = document.createElement('canvas');
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+            canvas.getContext('2d').drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+            const capturedImageData = canvas.toDataURL('image/jpeg');
+
+            setCapturedImageData(capturedImageData);
+            stopWebcam();
         }
     };
 
@@ -44,10 +62,16 @@ export const Camera = () => {
             {webcamStream ? (
                 <div>
                     <video autoPlay playsInline muted ref={videoRef} />
-                    <button onClick={stopWebcam}>Stop Webcam</button>
+                    <button onClick={captureImage}>Capture Image</button>
                 </div>
             ) : (
                 <button onClick={startWebcam}>Start Webcam</button>
+            )}
+            {capturedImageData && (
+                <div>
+                    <h2>Captured Image:</h2>
+                    <img src={capturedImageData} alt="Captured" />
+                </div>
             )}
         </div>
     );
