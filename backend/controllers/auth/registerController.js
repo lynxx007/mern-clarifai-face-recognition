@@ -4,7 +4,7 @@ import 'dotenv/config'
 import { attachCookie } from "../../utils/attachCookie.js";
 
 const registerUser = expressAsyncHandler(async (req, res) => {
-    const { email, fullName, password } = req.body
+    const { email, fullName, password, isHuman } = req.body
 
     if (!email) {
         res.status(400)
@@ -19,6 +19,11 @@ const registerUser = expressAsyncHandler(async (req, res) => {
     if (!password) {
         res.status(400)
         throw new Error('Password is required')
+    }
+
+    if (!isHuman) {
+        res.status(400)
+        throw new Error('Human verification is required')
     }
 
     const userExist = await User.findOne({ email })
