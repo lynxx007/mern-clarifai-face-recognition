@@ -5,8 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon backend/server.js",
-    "start": "node backend/server.js"
+    "dev": "concurrently --kill-others-on-fail \" npm run server\" \" npm run client\"",
+    "start": "node backend/server.js",
+    "client": "cd client && npm run dev",
+    "server": "nodemon backend/server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "clarifai-nodejs-grpc": "^9.7.0",
+    "concurrently": "^8.2.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
