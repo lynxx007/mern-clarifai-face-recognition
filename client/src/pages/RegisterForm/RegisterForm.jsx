@@ -3,11 +3,14 @@ import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
 import { AlertDestructive } from '../../components/Alert/Alert';
 import { useToast } from '@/components/ui/use-toast';
+import { Camera } from '@/components/Camera/Camera';
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isHuman, setIsHuman] = useState(false)
+
     const { toast } = useToast()
 
     const { registerUser, displayAlert, hideAlert, showAlert, alertText } = useContext(AppContext)
@@ -31,7 +34,7 @@ const Register = () => {
             setTimeout(hideAlert, 3000)
             return
         }
-        registerUser(email, name, password)
+        registerUser(email, name, password, isHuman)
 
         toast({
             description: 'Registered succesfully.'
@@ -84,12 +87,16 @@ const Register = () => {
                             />
                         </div>
                     </fieldset>
+                    <div className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib">
+                        <Camera />
+                    </div>
                     <div className="">
                         <input
                             onClick={onSubmitSignIn}
                             className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                             type="submit"
                             value="Register"
+                            disabled={isHuman}
                         />
                     </div>
                     <div className="lh-copy mt3">
@@ -97,7 +104,7 @@ const Register = () => {
                             to='/login'
                             className="f6 link dim black db pointer"
                         >
-                            Login
+                            Already have an account?
                         </Link>
                     </div>
                 </div>

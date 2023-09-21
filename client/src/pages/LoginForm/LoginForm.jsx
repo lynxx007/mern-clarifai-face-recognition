@@ -6,6 +6,7 @@ import { AlertDemo } from '../../components/Alert/Alert';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { Label } from '@/components/ui/label';
+import { Camera } from 'lucide-react';
 
 const SignIn = () => {
     const [signInEmail, setSignInEmail] = useState('');
@@ -85,12 +86,15 @@ const SignIn = () => {
                             value="Sign in"
                         />
                     </div>
+                    <div className="">
+                        <Camera />
+                    </div>
                     <div className="lh-copy mt3">
                         <Link
                             to='/register'
                             className="f6 link dim black db pointer"
                         >
-                            Register
+                            Do not have an account?
                         </Link>
                     </div>
                 </div>
