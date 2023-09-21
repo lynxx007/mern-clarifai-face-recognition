@@ -29,6 +29,10 @@ const userSchema = new Schema({
         type: Number,
         default: 0
     },
+    isHuman: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 })
