@@ -4,6 +4,7 @@ import loginUser from '../controllers/auth/loginController.js'
 import logoutUser from '../controllers/auth/logoutController.js'
 import { getCurrentUser } from '../controllers/auth/getCurrentUser.js'
 import checkAuth from '../middlewares/checkAuthMiddleware.js'
+import { faceDetect } from '../controllers/auth/faceDetectRegister.js'
 
 
 
@@ -17,6 +18,8 @@ router.post('/register', registerUser)
 router.get('/logout', logoutUser)
 
 router.get('/getCurrentUser', checkAuth, getCurrentUser)
+
+router.get('/faceDetect', faceDetect)
 
 
 
