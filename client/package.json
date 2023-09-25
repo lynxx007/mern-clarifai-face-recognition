@@ -17,6 +17,7 @@
     "axios": "^1.4.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "image-compressor": "^2.0.3",
     "lucide-react": "^0.270.0",
     "particles-bg": "^2.5.5",
     "react": "^18.2.0",
