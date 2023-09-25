@@ -32,7 +32,8 @@ const userSchema = new Schema({
     isHuman: {
         type: Boolean,
         default: false
-    }
+    },
+    faceUrl: [String]
 }, {
     timestamps: true
 })
