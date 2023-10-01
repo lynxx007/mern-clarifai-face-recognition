@@ -10,34 +10,25 @@ import path, { dirname } from 'path';
 import { errorHandler, notFound } from './middlewares/errorMiddleware.js'
 import predictRoutes from './routes/imageRoutes.js'
 import cookieParser from 'cookie-parser'
-import multer from 'multer'
-import { uploadImage } from './config/cloudinary.js'
+
+
 
 await connectDb()
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+var __dirname = dirname(fileURLToPath(import.meta.url));
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, './upload'))
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-    }
-})
 
-const upload = multer({ storage })
 
 
 
 const app = express()
 
-// await uploadImage()
+
 
 app.use(cookieParser())
 
 app.use(express.static(path.resolve(__dirname, '../client/dist')));
-app.use('/uploads', express.static(path.join(__dirname, 'upload')));
+
 
 if (process.env.NODE_ENV === 'development') {
     app.use(cors({
@@ -51,13 +42,10 @@ app.use(express.json({ limit: '10mb' }))
 
 app.use(express.urlencoded({ limit: '10mb', extended: true })); // Adjust the limit as needed
 
-
-
-
 app.use(mongoSanitize())
 
 
-app.use('/api/v1/auth', upload.single('image'), authRoutes)
+app.use('/api/v1/auth', authRoutes)
 
 app.use('/api/v1/image', predictRoutes)
 
