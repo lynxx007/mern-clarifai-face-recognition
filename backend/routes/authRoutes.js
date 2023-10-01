@@ -8,7 +8,6 @@ import { faceDetect } from '../controllers/auth/faceDetectRegister.js'
 
 
 
-
 const router = express.Router()
 
 router.post('/login', loginUser)
@@ -19,7 +18,7 @@ router.get('/logout', logoutUser)
 
 router.get('/getCurrentUser', checkAuth, getCurrentUser)
 
-router.get('/faceDetect', faceDetect)
+router.post('/faceDetect/:id', faceDetect)
 
 
 
