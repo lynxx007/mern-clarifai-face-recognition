@@ -1,21 +1,42 @@
-import { clarifaiApiCallBytes } from "../clarifaiRequests/predictViaBytes.js";
+
+import { uploadSingleImage } from "../../config/cloudinary.js";
+import configureMulter from "../../config/multerConfig.js";
+import { getFile } from "../../utils/findSingleImage.js";
 import { clarifaiApiCallUrl } from "../clarifaiRequests/predictViaUrl.js";
 
 
+
+
 export const faceDetect = async (req, res) => {
-    try {
+    const { id } = req.params
 
-        const imageUrl = req.query.base64Image
+    const multerConfig = configureMulter(id)
 
-        if (!imageUrl) {
-            return res.status(400).json({ error: 'Missing imageUrl parameter' });
+    const upload = multerConfig.single("image")
+
+    upload(req, res, async (err) => {
+        if (err) {
+            // Handle the error
+            return res.status(500).send('Upload failed');
         }
-        const predictedConcepts = await clarifaiApiCallBytes(imageUrl)
+        try {
+            const timestamp = parseInt(id)
+            const file = await getFile(timestamp);
+            const url = await uploadSingleImage(file);
+            const predictedConcepts = await clarifaiApiCallUrl(url);
+            console.log(predictedConcepts);
+            console.log(url);
+            // Now you can process the file as needed
+            res.status(200).json({
+                predictedConcepts,
+                url,
+            })
+        } catch (error) {
+            // Handle any errors that occurred while getting the file
+            console.error('Error getting the file:', error);
+            res.status(500).send('Error getting the file');
+        }
+    })
 
-        res.json({ isHuman: true, predictedConcepts })
 
-    } catch (error) {
-        console.error('Error predicting concepts:', error);
-        res.status(500).json({ error: 'Failed to predict concepts' });
-    }
 }
