@@ -41,9 +41,9 @@ export const uploadImage = async () => {
     }
 };
 
-export const uploadSingleImage = async (image) => {
+export const uploadSingleImage = async (imagePath) => {
     try {
-        const result = await cloudinary.uploader.upload(image, {
+        const result = await cloudinary.uploader.upload(imagePath, {
             folder: 'face-folder'
         })
         return result.secure_url;
