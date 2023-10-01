@@ -15,7 +15,8 @@ const initialState = {
     showAlert: false,
     alertText: '',
     box: [],
-    isLogin: false
+    isLogin: false,
+    isHuman: false,
 }
 
 
@@ -111,6 +112,26 @@ const appReducer = (state = initialState, action) => {
                 alertText: 'Theres an error with the server, you could try again or could change another image.',
                 showAlert: true
             }
+        case APP_ACTION_TYPE.SUBMIT_IMG_START_REGIS:
+            return {
+                ...state,
+                isLoading: true,
+            }
+
+        case APP_ACTION_TYPE.SUBMIT_IMG_REGIS:
+            return {
+                ...state,
+                isLoading: false,
+                box: action.payload.calculatedFaceLocation,
+                isHuman: true
+            }
+        case APP_ACTION_TYPE.SUBMIT_IMG_FAIL_REGIS:
+            return {
+                ...state,
+                isLoading: false,
+                alertText: 'Theres an error with the server, you could try again or could change another image.',
+                showAlert: true
+            }
         case APP_ACTION_TYPE.GET_CURRENT_USER_START:
             return {
                 ...state,
@@ -200,6 +221,26 @@ export const AppProvider = ({ children }) => {
 
     }
 
+    const submitImgRegister = async (dataImage) => {
+        dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_START_REGIS))
+        const timestamp = dataImage.name
+        try {
+            const formData = new FormData()
+            formData.set('image', dataImage)
+
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+            const response = await axios.post(`api/v1/auth/faceDetect`, formData, config)
+
+            console.log(response);
+            const calculatedFaceLocation = calculateFaceLocation(response)
+            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_REGIS, { calculatedFaceLocation }))
+        } catch (error) {
+            console.log(error);
+            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_FAIL_REGIS))
+            setTimeout(hideAlert, 3000)
+        }
+    }
+
     const getCurrentUser = async () => {
         dispatch(createAction(APP_ACTION_TYPE.GET_CURRENT_USER_START))
         try {
@@ -224,7 +265,8 @@ export const AppProvider = ({ children }) => {
         loginUser,
         logoutUser,
         hideAlert,
-        submitImg
+        submitImg,
+        submitImgRegister
     }
 
     return (
