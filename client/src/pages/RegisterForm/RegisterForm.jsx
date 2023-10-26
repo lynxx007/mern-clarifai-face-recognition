@@ -5,15 +5,15 @@ import { AlertDestructive } from '../../components/Alert/Alert';
 import { useToast } from '@/components/ui/use-toast';
 import { Camera } from '@/components/Camera/Camera';
 
+
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [isHuman, setIsHuman] = useState(false)
 
     const { toast } = useToast()
 
-    const { registerUser, displayAlert, hideAlert, showAlert, alertText } = useContext(AppContext)
+    const { registerUser, displayAlert, hideAlert, showAlert, alertText, isHuman } = useContext(AppContext)
 
     const onNameChange = (event) => {
         setName(event.target.value);
@@ -29,12 +29,12 @@ const Register = () => {
 
     const onSubmitSignIn = (e) => {
         e.preventDefault()
-        if (name === '' || password === '' || email === '') {
+        if (name === '' || password === '' || email === '' || isHuman === false) {
             displayAlert()
             setTimeout(hideAlert, 3000)
             return
         }
-        registerUser(email, name, password, isHuman)
+        registerUser(email, name, password)
 
         toast({
             description: 'Registered succesfully.'
@@ -96,7 +96,7 @@ const Register = () => {
                             className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                             type="submit"
                             value="Register"
-                            disabled={isHuman}
+                            disabled={!isHuman}
                         />
                     </div>
                     <div className="lh-copy mt3">
