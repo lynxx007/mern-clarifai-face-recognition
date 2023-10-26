@@ -86,9 +86,6 @@ const SignIn = () => {
                             value="Sign in"
                         />
                     </div>
-                    <div className="">
-                        <Camera />
-                    </div>
                     <div className="lh-copy mt3">
                         <Link
                             to='/register'
