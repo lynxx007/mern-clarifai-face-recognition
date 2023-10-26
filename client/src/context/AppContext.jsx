@@ -17,6 +17,7 @@ const initialState = {
     box: [],
     isLogin: false,
     isHuman: false,
+    url: ''
 }
 
 
@@ -116,6 +117,7 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoading: true,
+                isHuman: false
             }
 
         case APP_ACTION_TYPE.SUBMIT_IMG_REGIS:
@@ -123,7 +125,8 @@ const appReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 box: action.payload.calculatedFaceLocation,
-                isHuman: true
+                isHuman: action.payload.isHuman,
+                url: action.payload.url
             }
         case APP_ACTION_TYPE.SUBMIT_IMG_FAIL_REGIS:
             return {
@@ -223,21 +226,34 @@ export const AppProvider = ({ children }) => {
 
     const submitImgRegister = async (dataImage) => {
         dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_START_REGIS))
-        const timestamp = dataImage.name
-        try {
-            const formData = new FormData()
-            formData.set('image', dataImage)
+        const fileName = dataImage.name
 
-            const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-            const response = await axios.post(`api/v1/auth/faceDetect`, formData, config)
+        const regex = /image-(\d+)\.jpeg/;
+        const match = fileName.match(regex); // Use match() to find the pattern in the fileName
 
-            console.log(response);
-            const calculatedFaceLocation = calculateFaceLocation(response)
-            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_REGIS, { calculatedFaceLocation }))
-        } catch (error) {
-            console.log(error);
-            dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_FAIL_REGIS))
-            setTimeout(hideAlert, 3000)
+        if (match) {
+            // Extract the captured number using match[1] and convert it to an integer
+            const timestamp = parseInt(match[1]);
+            console.log(timestamp);
+            try {
+                const formData = new FormData();
+                formData.set('image', dataImage);
+
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+                const response = await axios.post(`api/v1/auth/faceDetect/${timestamp}`, formData, config);
+                console.log(response);
+                const { url, isHuman } = response.data
+                const calculatedFaceLocation = calculateFaceLocation(response);
+                dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_REGIS, { calculatedFaceLocation, url, isHuman }));
+            } catch (error) {
+                console.log(error);
+                dispatch(createAction(APP_ACTION_TYPE.SUBMIT_IMG_FAIL_REGIS));
+                setTimeout(hideAlert, 3000);
+            }
+        } else {
+            console.log("Filename doesn't match the expected pattern.");
+            // Handle the case where the fileName doesn't match the pattern.
+            // You can dispatch an appropriate action or show an error message.
         }
     }
 
