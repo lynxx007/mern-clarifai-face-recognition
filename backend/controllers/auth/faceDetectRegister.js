@@ -27,9 +27,11 @@ export const faceDetect = async (req, res) => {
             console.log(predictedConcepts);
             console.log(url);
             // Now you can process the file as needed
+            const isHuman = true
             res.status(200).json({
                 predictedConcepts,
                 url,
+                isHuman
             })
         } catch (error) {
             // Handle any errors that occurred while getting the file
