@@ -36,7 +36,8 @@ const registerUser = expressAsyncHandler(async (req, res) => {
     const newUser = new User({
         email,
         fullName,
-        password
+        password,
+        isHuman
     })
 
     const registeredUser = await newUser.save()
